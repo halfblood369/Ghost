@@ -134,9 +134,15 @@ frontendControllers = {
             }
 
             setReqCtx(req, page.posts);
+            var p = [];
+            page.posts.forEach(function(item) {
+                if (item.title != 'about') {
+                    p.push(item)
+                }
+            })
 
             // Render the page of posts
-            filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+            filters.doFilter('prePostsRender', p).then(function (posts) {
                 getActiveThemePaths().then(function (paths) {
                     var view = paths.hasOwnProperty('home.hbs') ? 'home' : 'index';
 
@@ -326,7 +332,9 @@ frontendControllers = {
                 filters.doFilter('prePostsRender', post).then(function (post) {
                     getActiveThemePaths().then(function (paths) {
                         var view = template.getThemeViewForPost(paths, post);
-
+                        if (path == '/about/') {
+                            view = 'about'
+                        }
                         res.render(view, formatResponse(post));
                     });
                 });
